@@ -1,0 +1,197 @@
+.expense-list-container {
+  margin-bottom: var(--space-8);
+}
+
+.expense-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-6);
+}
+
+.expense-list-header h3 {
+  font-size: var(--text-2xl);
+  margin: 0;
+}
+
+.expense-count {
+  font-size: var(--text-sm);
+  color: var(--color-text-tertiary);
+  font-weight: var(--font-medium);
+  background: var(--glass-bg);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+}
+
+/* Expense List */
+.expense-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* Expense Item */
+.expense-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border-radius: var(--radius-xl);
+  transition: all var(--transition-base);
+}
+
+.expense-item:hover {
+  box-shadow: var(--glass-shadow-hover);
+}
+
+/* Category Icon */
+.expense-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-md);
+}
+
+/* Details */
+.expense-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.expense-description {
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-1) 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.expense-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-text-tertiary);
+}
+
+.expense-category {
+  font-weight: var(--font-medium);
+}
+
+.expense-separator {
+  opacity: 0.5;
+}
+
+.expense-date {
+  font-weight: var(--font-normal);
+}
+
+/* Amount */
+.expense-amount-section {
+  flex-shrink: 0;
+}
+
+.expense-amount {
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+  text-align: right;
+}
+
+/* Actions */
+.expense-actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.btn-action {
+  padding: var(--space-2);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-edit {
+  background: var(--glass-bg);
+  color: var(--color-primary);
+}
+
+.btn-edit:hover {
+  background: var(--color-primary);
+  color: white;
+  transform: scale(1.1);
+}
+
+.btn-delete {
+  background: var(--glass-bg);
+  color: var(--color-danger);
+}
+
+.btn-delete:hover {
+  background: var(--color-danger);
+  color: white;
+  transform: scale(1.1);
+}
+
+/* Empty State */
+.expense-list-empty {
+  padding: var(--space-12);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .expense-item {
+    flex-wrap: wrap;
+    padding: var(--space-4);
+  }
+
+  .expense-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.25rem;
+  }
+
+  .expense-amount {
+    font-size: var(--text-lg);
+  }
+
+  .expense-actions {
+    width: 100%;
+    justify-content: flex-end;
+    margin-top: var(--space-2);
+  }
+
+  .expense-description {
+    font-size: var(--text-sm);
+  }
+
+  .expense-meta {
+    font-size: var(--text-xs);
+  }
+}
+
+
+.expense-list-actions {
+  display: flex;
+  gap: var(--space-4);
+  justify-content: center;
+  margin-top: var(--space-6);
+}
+
+.expense-list-actions .btn {
+  flex: 1;
+  max-width: 300px;
+}

@@ -1,0 +1,195 @@
+.budget-summary {
+  margin-bottom: var(--space-8);
+  padding: var(--space-8);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--blur-lg));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--glass-shadow);
+}
+
+/* Budget Cards */
+.budget-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-6);
+  margin-bottom: var(--space-6);
+}
+
+.budget-card {
+  padding: var(--space-6);
+  border-radius: var(--radius-xl);
+  transition: all var(--transition-base);
+}
+
+.budget-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--glass-shadow-hover);
+}
+
+.budget-card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.budget-emoji {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.budget-label {
+  font-size: var(--text-sm);
+  color: var(--color-text-tertiary);
+  font-weight: var(--font-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.budget-amount {
+  font-size: var(--text-3xl);
+  font-weight: var(--font-extrabold);
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+  line-height: 1.2;
+}
+
+.budget-amount.spent {
+  color: var(--color-primary);
+}
+
+.budget-amount.positive {
+  color: var(--color-success);
+}
+
+.budget-amount.negative {
+  color: var(--color-danger);
+}
+
+.budget-percentage {
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-medium);
+}
+
+/* Progress Bar */
+.progress-section {
+  margin-bottom: var(--space-6);
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 16px;
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar {
+  height: 100%;
+  border-radius: var(--radius-full);
+  position: relative;
+  transition: width var(--transition-slow);
+}
+
+.progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.progress-bar.safe {
+  background: linear-gradient(90deg, var(--color-success), var(--color-success-dark));
+}
+
+.progress-bar.warning {
+  background: linear-gradient(90deg, var(--color-warning), var(--color-warning-dark));
+}
+
+.progress-bar.danger {
+  background: linear-gradient(90deg, var(--color-danger), var(--color-danger-dark));
+}
+
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+  font-weight: var(--font-medium);
+}
+
+/* Status Message */
+.status-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-6);
+  border-radius: var(--radius-lg);
+  font-weight: var(--font-semibold);
+  font-size: var(--text-base);
+}
+
+.status-emoji {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.status-message.safe {
+  background: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+
+.status-message.warning {
+  background: var(--color-warning-light);
+  color: var(--color-warning-dark);
+}
+
+.status-message.danger {
+  background: var(--color-danger-light);
+  color: var(--color-danger-dark);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .budget-summary {
+    padding: var(--space-6);
+  }
+
+  .budget-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .budget-amount {
+    font-size: var(--text-2xl);
+  }
+
+  .status-message {
+    flex-direction: column;
+    text-align: center;
+  }
+}

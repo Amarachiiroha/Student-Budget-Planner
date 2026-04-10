@@ -1,0 +1,149 @@
+/* Backdrop - LOWER z-index */
+.settings-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 1040;
+}
+
+/* Modal Wrapper - HIGHER z-index */
+.settings-modal-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: var(--space-4);
+  pointer-events: none;
+}
+
+.settings-modal {
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: var(--space-8);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-2xl);
+  pointer-events: all;
+}
+
+.settings-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.settings-section {
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.settings-section:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-4);
+}
+
+.section-description {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-4);
+  font-weight: var(--font-medium);
+}
+
+[data-theme="light"] .section-description {
+  color: #1e293b;
+  font-weight: var(--font-semibold);
+}
+
+/* Currency Grid */
+.currency-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+.currency-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-6);
+  background: var(--color-bg-secondary);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.currency-card:hover {
+  background: var(--color-bg-tertiary);
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.currency-card.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.currency-card.active .currency-symbol,
+.currency-card.active .currency-code,
+.currency-card.active .currency-name {
+  color: white;
+}
+
+.currency-symbol {
+  font-size: var(--text-3xl);
+  font-weight: var(--font-bold);
+}
+
+.currency-code {
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+}
+
+.currency-name {
+  font-size: var(--text-xs);
+  opacity: 0.8;
+}
+
+/* Backup Actions */
+.backup-actions {
+  display: flex;
+  gap: var(--space-4);
+}
+
+.backup-actions .btn {
+  flex: 1;
+}
+
+@media (max-width: 640px) {
+  .settings-modal {
+    padding: var(--space-6);
+  }
+
+  .currency-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .backup-actions {
+    flex-direction: column;
+  }
+}

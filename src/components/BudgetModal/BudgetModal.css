@@ -1,0 +1,8 @@
+.budget-modal {
+  width: 100%;
+  max-width: 400px;
+  padding: var(--space-8);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-2xl);
+  pointer-events: all;
+}
