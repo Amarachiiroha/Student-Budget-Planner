@@ -1,8 +1,205 @@
 .budget-modal {
   width: 100%;
-  max-width: 400px;
-  padding: var(--space-8);
+  max-width: 480px;
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: var(--space-6);
   border-radius: var(--radius-2xl);
   box-shadow: var(--shadow-2xl);
   pointer-events: all;
+}
+
+/* Total budget row */
+.bm-total-row {
+  margin-bottom: 20px;
+}
+
+.bm-label {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-secondary);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.bm-amount-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-bg-secondary);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 12px 16px;
+}
+
+.bm-currency {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: var(--color-primary);
+}
+
+.bm-big-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+  outline: none;
+  min-width: 0;
+}
+
+/* Period tabs */
+.bm-period-row {
+  margin-bottom: 20px;
+}
+
+.bm-period-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.bm-period-tab {
+  flex: 1;
+  padding: 10px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.bm-period-tab.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+  font-weight: var(--font-semibold);
+}
+
+.bm-period-tab:hover:not(.active) {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* Category sliders section */
+.bm-sliders-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 20px;
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.bm-slider-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bm-slider-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bm-cat-name {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-text-primary);
+}
+
+.bm-cat-amount {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Slider track wrapper */
+.bm-slider-track {
+  position: relative;
+  height: 8px;
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.bm-slider-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: var(--radius-full);
+  pointer-events: none;
+  transition: width 0.15s ease;
+}
+
+.bm-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  margin: 0;
+  z-index: 2;
+}
+
+/* Summary */
+.bm-summary {
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 8px;
+}
+
+.bm-summary-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+
+.bm-summary-item span {
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.bm-summary-item strong {
+  font-size: var(--text-base);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.bm-summary-item.highlight {
+  background: var(--glass-bg);
+  border-radius: var(--radius-md);
+  padding: 6px 10px;
+}
+
+/* Scrollbar styling for sliders section */
+.bm-sliders-section::-webkit-scrollbar {
+  width: 4px;
+}
+.bm-sliders-section::-webkit-scrollbar-track {
+  background: transparent;
+}
+.bm-sliders-section::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 2px;
 }
