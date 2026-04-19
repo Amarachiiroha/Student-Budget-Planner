@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Settings as SettingsIcon } from 'lucide-react';
 import { 
   loadExpenses, 
@@ -24,10 +24,16 @@ import SpendingTrend from '../Charts/SpendingTrend';
 import Settings from '../Settings/Settings';
 import './Dashboard.css';
 
-function Dashboard({ theme, toggleTheme, isDark }) {
+const pageVariants = {
+  initial: { opacity: 0, y: 16 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.25, ease: 'easeOut' } },
+  exit:    { opacity: 0, y: -8, transition: { duration: 0.15 } },
+};
+
+function Dashboard({ theme, toggleTheme, isDark, activePage }) {
   const [expenses, setExpenses] = useState([]);
   const [monthlyBudget, setMonthlyBudget] = useState(500);
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate] = useState(new Date());
   const [insights, setInsights] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingExpense, setEditingExpense] = useState(null);
@@ -35,35 +41,33 @@ function Dashboard({ theme, toggleTheme, isDark }) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false);
 
-  // Load data on mount
   useEffect(() => {
     loadData();
   }, [currentDate]);
 
-  // Listen for budget modal open event
   useEffect(() => {
     const handleOpenBudget = () => setIsBudgetModalOpen(true);
     window.addEventListener('openBudgetModal', handleOpenBudget);
     return () => window.removeEventListener('openBudgetModal', handleOpenBudget);
   }, []);
 
+  // Open expense form when Add tab is tapped
+  useEffect(() => {
+    if (activePage === 'add') {
+      setEditingExpense(null);
+      setIsFormOpen(true);
+    }
+  }, [activePage]);
+
   const loadData = () => {
     const budget = loadBudget();
     setMonthlyBudget(budget);
-
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
     const monthExpenses = getExpensesByMonth(year, month);
     setExpenses(monthExpenses);
-
-    // Calculate insights
     const spendingInsights = getSpendingInsights(budget, monthExpenses);
     setInsights(spendingInsights);
-  };
-
-  const handleAddExpense = () => {
-    setEditingExpense(null);
-    setIsFormOpen(true);
   };
 
   const handleEditExpense = (expense) => {
@@ -103,26 +107,25 @@ function Dashboard({ theme, toggleTheme, isDark }) {
   const daysRemaining = getDaysRemainingInMonth();
   const currency = loadCurrency();
 
+  const pageKey = activePage === 'add' ? 'dashboard' : activePage;
+
   return (
-    <div className="dashboard">
+    <div className="dashboard" style={{ paddingBottom: '72px' }}>
       <motion.div
         initial="hidden"
         animate="visible"
         variants={ANIMATION_VARIANTS.staggerContainer}
         className="dashboard-container"
       >
-        {/* Compact Header with Theme Toggle */}
-        <motion.header 
+        {/* Header — always visible */}
+        <motion.header
           className="dashboard-header-compact"
           variants={ANIMATION_VARIANTS.fadeInDown}
         >
           <div className="header-left">
-            <h1 className="dashboard-title-compact">
-              💰 Your Budget
-            </h1>
+            <h1 className="dashboard-title-compact">💰 Your Budget</h1>
             <span className="header-month">{currentMonth} {currentYear}</span>
           </div>
-          
           <div className="header-right">
             <div className="header-stats">
               <div className="stat-compact">
@@ -135,8 +138,6 @@ function Dashboard({ theme, toggleTheme, isDark }) {
                 <span className="stat-value-compact">{daysRemaining}</span>
               </div>
             </div>
-
-            {/* Theme Toggle - Same Line */}
             <button
               onClick={toggleTheme}
               className="theme-toggle-compact"
@@ -147,107 +148,112 @@ function Dashboard({ theme, toggleTheme, isDark }) {
           </div>
         </motion.header>
 
-        {/* Settings Button - Compact */}
-        <motion.div
-          className="settings-btn-container"
-          variants={ANIMATION_VARIANTS.fadeInDown}
-        >
-          <button
-            onClick={() => setIsSettingsOpen(true)}
-            className="btn btn-secondary btn-sm"
-          >
+        {/* Settings button — always visible */}
+        <motion.div className="settings-btn-container" variants={ANIMATION_VARIANTS.fadeInDown}>
+          <button onClick={() => setIsSettingsOpen(true)} className="btn btn-secondary btn-sm">
             <SettingsIcon size={16} />
             Settings & Backup
           </button>
         </motion.div>
 
-        {/* Budget Summary */}
-        {insights && (
-          <BudgetSummary 
-            budget={monthlyBudget}
-            insights={insights}
-            currency={currency}
-          />
-        )}
+        {/* Page content — switches based on activePage */}
+        <AnimatePresence mode="wait">
 
-        {/* Quick Stats */}
-        <motion.div 
-          className="quick-stats-grid"
-          variants={ANIMATION_VARIANTS.fadeInUp}
-        >
-          <div className="stat-card glass">
-            <div className="stat-icon">📊</div>
-            <div className="stat-content">
-              <p className="stat-label">Total Expenses</p>
-              <p className="stat-number">{expenses.length}</p>
-            </div>
-          </div>
+          {/* ── DASHBOARD PAGE ── */}
+          {pageKey === 'dashboard' && (
+            <motion.div
+              key="dashboard"
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              {insights && (
+                <BudgetSummary
+                  budget={monthlyBudget}
+                  insights={insights}
+                  currency={currency}
+                />
+              )}
 
-          <div className="stat-card glass">
-            <div className="stat-icon">📈</div>
-            <div className="stat-content">
-              <p className="stat-label">Daily Average</p>
-              <p className="stat-number">
-                {currency.symbol}{insights?.dailyAverage.toFixed(2) || '0.00'}
-              </p>
-            </div>
-          </div>
+              <motion.div className="quick-stats-grid" variants={ANIMATION_VARIANTS.fadeInUp}>
+                <div className="stat-card glass">
+                  <div className="stat-icon">📊</div>
+                  <div className="stat-content">
+                    <p className="stat-label">Total Expenses</p>
+                    <p className="stat-number">{expenses.length}</p>
+                  </div>
+                </div>
+                <div className="stat-card glass">
+                  <div className="stat-icon">📈</div>
+                  <div className="stat-content">
+                    <p className="stat-label">Daily Average</p>
+                    <p className="stat-number">
+                      {currency.symbol}{insights?.dailyAverage.toFixed(2) || '0.00'}
+                    </p>
+                  </div>
+                </div>
+                <div className="stat-card glass">
+                  <div className="stat-icon">🎯</div>
+                  <div className="stat-content">
+                    <p className="stat-label">Budget/Day Left</p>
+                    <p className="stat-number">
+                      {currency.symbol}{insights?.budgetPerDay.toFixed(2) || '0.00'}
+                    </p>
+                  </div>
+                </div>
+                <div className="stat-card glass">
+                  <div className="stat-icon">{insights?.topCategory?.emoji || '💡'}</div>
+                  <div className="stat-content">
+                    <p className="stat-label">Top Category</p>
+                    <p className="stat-number-small">
+                      {insights?.topCategory?.name || 'None yet'}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
 
-          <div className="stat-card glass">
-            <div className="stat-icon">🎯</div>
-            <div className="stat-content">
-              <p className="stat-label">Budget/Day Left</p>
-              <p className="stat-number">
-                {currency.symbol}{insights?.budgetPerDay.toFixed(2) || '0.00'}
-              </p>
-            </div>
-          </div>
+          {/* ── CHARTS PAGE ── */}
+          {pageKey === 'charts' && (
+            <motion.div
+              key="charts"
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <h2 className="page-section-title">Spending Insights</h2>
+              <div className="charts-grid">
+                <CategoryChart expenses={expenses} currency={currency} />
+                <SpendingTrend expenses={expenses} currency={currency} />
+              </div>
+            </motion.div>
+          )}
 
-          <div className="stat-card glass">
-            <div className="stat-icon">
-              {insights?.topCategory?.emoji || '💡'}
-            </div>
-            <div className="stat-content">
-              <p className="stat-label">Top Category</p>
-              <p className="stat-number-small">
-                {insights?.topCategory?.name || 'None yet'}
-              </p>
-            </div>
-          </div>
-        </motion.div>
+          {/* ── TRANSACTIONS PAGE ── */}
+          {pageKey === 'transactions' && (
+            <motion.div
+              key="transactions"
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <h2 className="page-section-title">Transactions</h2>
+              <ExpenseList
+                expenses={expenses}
+                onEdit={handleEditExpense}
+                onDelete={handleDeleteExpense}
+                currency={currency}
+              />
+            </motion.div>
+          )}
 
-        {/* Charts Section */}
-        <motion.div 
-          className="charts-grid"
-          variants={ANIMATION_VARIANTS.fadeInUp}
-        >
-          <CategoryChart expenses={expenses} currency={currency} />
-          <SpendingTrend expenses={expenses} currency={currency} />
-        </motion.div>
+        </AnimatePresence>
 
-        {/* Expense List */}
-        <ExpenseList
-          expenses={expenses}
-          onEdit={handleEditExpense}
-          onDelete={handleDeleteExpense}
-          currency={currency}
-        />
-
-        {/* Add Expense Button */}
-        <motion.div
-          className="add-expense-fab-container"
-          variants={ANIMATION_VARIANTS.scaleIn}
-        >
-          <button
-            onClick={handleAddExpense}
-            className="btn-fab"
-            aria-label="Add expense"
-          >
-            <span style={{ fontSize: '1.5rem' }}>➕</span>
-          </button>
-        </motion.div>
-
-        {/* Budget Modal */}
+        {/* Modals — always mounted */}
         {isBudgetModalOpen && (
           <BudgetModal
             currentBudget={monthlyBudget}
@@ -257,7 +263,6 @@ function Dashboard({ theme, toggleTheme, isDark }) {
           />
         )}
 
-        {/* Expense Form Modal */}
         <ExpenseForm
           isOpen={isFormOpen}
           onClose={() => setIsFormOpen(false)}
@@ -265,14 +270,12 @@ function Dashboard({ theme, toggleTheme, isDark }) {
           editingExpense={editingExpense}
         />
 
-        {/* Settings Modal */}
         <Settings
           isOpen={isSettingsOpen}
           onClose={() => setIsSettingsOpen(false)}
           onDataImported={loadData}
         />
 
-        {/* Notification */}
         {notification && (
           <motion.div
             className="notification"
@@ -284,11 +287,7 @@ function Dashboard({ theme, toggleTheme, isDark }) {
           </motion.div>
         )}
 
-        {/* Footer */}
-        <motion.footer 
-          className="dashboard-footer"
-          variants={ANIMATION_VARIANTS.fadeInUp}
-        >
+        <motion.footer className="dashboard-footer" variants={ANIMATION_VARIANTS.fadeInUp}>
           <p>© 2026 Student Budget Planner. Made with 💜 for students.</p>
         </motion.footer>
       </motion.div>

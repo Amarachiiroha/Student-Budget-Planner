@@ -316,3 +316,11 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+.page-section-title {
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+  margin: 0 0 20px 0;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--color-primary-glow);
+}
