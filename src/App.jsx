@@ -8,12 +8,13 @@ import './styles/global.css';
 
 function App() {
   const { theme, toggleTheme, isDark } = useTheme();
-  const [screen, setScreen] = useState('login'); // 'login' | 'signup' | 'app'
+  const [screen, setScreen]     = useState('login');
   const [activePage, setActivePage] = useState('dashboard');
   const [userName, setUserName] = useState('');
 
   useEffect(() => {
-    const saved = localStorage.getItem('sbp_username');
+    // Check if user is already logged in from a previous session
+    const saved = localStorage.getItem('sbp_logged_in_user');
     if (saved) {
       setUserName(saved);
       setScreen('app');
@@ -21,13 +22,14 @@ function App() {
   }, []);
 
   const handleLogin = (name) => {
-    localStorage.setItem('sbp_username', name);
+    localStorage.setItem('sbp_logged_in_user', name);
     setUserName(name);
     setScreen('app');
+    setActivePage('dashboard');
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('sbp_username');
+    localStorage.removeItem('sbp_logged_in_user');
     setUserName('');
     setScreen('login');
   };

@@ -3,22 +3,56 @@ import { motion } from 'framer-motion';
 import './Auth.css';
 
 function SignupPage({ onSignup, onGoLogin }) {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [name, setName]         = useState('');
+  const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [confirm, setConfirm]   = useState('');
+  const [error, setError]       = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim() || !password.trim()) {
+    setError('');
+
+    // Validation
+    if (!name.trim() || !email.trim() || !password.trim() || !confirm.trim()) {
       setError('Please fill in all fields.');
       return;
     }
+
     if (password.length < 6) {
       setError('Password must be at least 6 characters.');
       return;
     }
-    onSignup(name.trim());
+
+    if (password !== confirm) {
+      setError('Passwords do not match.');
+      return;
+    }
+
+    // Check if email already exists
+    const storedAccounts = JSON.parse(localStorage.getItem('sbp_accounts') || '[]');
+    const exists = storedAccounts.find(
+      acc => acc.email.toLowerCase() === email.toLowerCase().trim()
+    );
+
+    if (exists) {
+      setError('An account with that email already exists. Please log in.');
+      return;
+    }
+
+    // Save new account
+    const newAccount = {
+      name: name.trim(),
+      email: email.toLowerCase().trim(),
+      password: password,
+      createdAt: new Date().toISOString()
+    };
+
+    storedAccounts.push(newAccount);
+    localStorage.setItem('sbp_accounts', JSON.stringify(storedAccounts));
+
+    // Log them in straight away
+    onSignup(newAccount.name);
   };
 
   return (
@@ -35,12 +69,12 @@ function SignupPage({ onSignup, onGoLogin }) {
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="auth-field">
-            <label>Name</label>
+            <label>Full Name</label>
             <input
               type="text"
-              placeholder="Your name"
+              placeholder="Amarachi Iroha"
               value={name}
-              onChange={e => setName(e.target.value)}
+              onChange={e => { setName(e.target.value); setError(''); }}
             />
           </div>
           <div className="auth-field">
@@ -49,16 +83,25 @@ function SignupPage({ onSignup, onGoLogin }) {
               type="email"
               placeholder="your@email.com"
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              onChange={e => { setEmail(e.target.value); setError(''); }}
             />
           </div>
           <div className="auth-field">
             <label>Password</label>
             <input
               type="password"
-              placeholder="••••••••"
+              placeholder="At least 6 characters"
               value={password}
-              onChange={e => setPassword(e.target.value)}
+              onChange={e => { setPassword(e.target.value); setError(''); }}
+            />
+          </div>
+          <div className="auth-field">
+            <label>Confirm Password</label>
+            <input
+              type="password"
+              placeholder="Repeat your password"
+              value={confirm}
+              onChange={e => { setConfirm(e.target.value); setError(''); }}
             />
           </div>
 
