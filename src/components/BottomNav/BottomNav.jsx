@@ -14,18 +14,6 @@ const NAV_ITEMS = [
     ),
   },
   {
-    id: 'add',
-    label: 'Add',
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-        <circle cx="12" cy="12" r="10"/>
-        <line x1="12" y1="8" x2="12" y2="16"/>
-        <line x1="8" y1="12" x2="16" y2="12"/>
-      </svg>
-    ),
-    isAction: true,
-  },
-  {
     id: 'charts',
     label: 'Charts',
     icon: (
@@ -48,6 +36,16 @@ const NAV_ITEMS = [
       </svg>
     ),
   },
+  {
+    id: 'profile',
+    label: 'Profile',
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+    ),
+  },
 ];
 
 function BottomNav({ activePage, onNavigate }) {
@@ -57,15 +55,13 @@ function BottomNav({ activePage, onNavigate }) {
         {NAV_ITEMS.map((item) => (
           <button
             key={item.id}
-            className={`bottom-nav-item${item.isAction ? ' bottom-nav-action' : ''}${activePage === item.id ? ' active' : ''}`}
+            className={`bottom-nav-item${activePage === item.id ? ' active' : ''}`}
             onClick={() => onNavigate(item.id)}
             aria-label={item.label}
             aria-current={activePage === item.id ? 'page' : undefined}
           >
             <span className="bottom-nav-icon">{item.icon}</span>
-            {!item.isAction && (
-              <span className="bottom-nav-label">{item.label}</span>
-            )}
+            <span className="bottom-nav-label">{item.label}</span>
           </button>
         ))}
       </div>

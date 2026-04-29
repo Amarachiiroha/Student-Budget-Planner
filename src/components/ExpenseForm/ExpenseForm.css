@@ -178,3 +178,9 @@
     padding: var(--space-2);
   }
 }
+.optional {
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+  font-weight: normal;
+  margin-left: 4px;
+}

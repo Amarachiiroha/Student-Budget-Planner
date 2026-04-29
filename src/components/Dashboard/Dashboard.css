@@ -429,3 +429,105 @@
     gap: 8px;
   }
 }
+/* Spending Insights card */
+.insights-card {
+  border-radius: var(--radius-xl);
+  padding: 16px 20px;
+  margin: 16px 0;
+}
+
+.insights-title {
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-primary);
+  margin: 0 0 10px;
+}
+
+.insights-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.insights-item {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  padding: 8px 12px;
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+  line-height: 1.5;
+}
+
+/* Monthly History card */
+.history-card {
+  border-radius: var(--radius-xl);
+  padding: 16px 20px;
+  margin-top: 16px;
+}
+
+.history-title {
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-primary);
+  margin: 0 0 14px;
+}
+
+.history-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.history-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.history-bar-label {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  width: 56px;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.history-bar-track {
+  flex: 1;
+  height: 10px;
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.history-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  min-width: 4px;
+}
+
+.history-bar-amount {
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-primary);
+  width: 52px;
+  text-align: right;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.history-empty {
+  border-radius: var(--radius-xl);
+  padding: 16px 20px;
+  margin-top: 16px;
+}
+
+.history-empty p {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+  text-align: center;
+}

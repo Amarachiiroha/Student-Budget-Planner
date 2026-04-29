@@ -1,12 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { CATEGORIES } from '../../utils/constants';
 import './BudgetModal.css';
 
-const PERIOD_OPTIONS = ['Weekly', 'Monthly', 'Custom'];
+const PERIOD_OPTIONS = ['Weekly', 'Monthly'];
 
-// Default category allocations as percentages of total budget
 const DEFAULT_ALLOCATIONS = {
   food:          20,
   transport:     10,
@@ -19,11 +18,10 @@ const DEFAULT_ALLOCATIONS = {
 };
 
 function BudgetModal({ currentBudget, onSave, onClose, currency }) {
-  const [budget, setBudget]   = useState(currentBudget || 500);
-  const [period, setPeriod]   = useState('Monthly');
-  const [allocs, setAllocs]   = useState(DEFAULT_ALLOCATIONS);
+  const [budget, setBudget] = useState(currentBudget || 500);
+  const [period, setPeriod] = useState('Monthly');
+  const [allocs, setAllocs] = useState(DEFAULT_ALLOCATIONS);
 
-  // Recalculate so sliders always sum to ≤ 100
   const totalAllocated = Object.values(allocs).reduce((a, b) => a + b, 0);
   const remaining      = Math.max(0, budget - (budget * totalAllocated / 100));
 
@@ -65,6 +63,7 @@ function BudgetModal({ currentBudget, onSave, onClose, currency }) {
           </div>
 
           <form onSubmit={handleSubmit}>
+
             {/* Total budget input */}
             <div className="bm-total-row">
               <label className="bm-label">Total Budget</label>
@@ -81,21 +80,34 @@ function BudgetModal({ currentBudget, onSave, onClose, currency }) {
               </div>
             </div>
 
-            {/* Budget period selector */}
+            {/* Budget Period — Monthly / Weekly */}
             <div className="bm-period-row">
               <label className="bm-label">Budget Period</label>
               <div className="bm-period-tabs">
-                {PERIOD_OPTIONS.map(p => (
+                {PERIOD_OPTIONS.map(opt => (
                   <button
-                    key={p}
+                    key={opt}
                     type="button"
-                    className={`bm-period-tab${period === p ? ' active' : ''}`}
-                    onClick={() => setPeriod(p)}
+                    className={`bm-period-tab${period === opt ? ' active' : ''}`}
+                    onClick={() => setPeriod(opt)}
                   >
-                    {p}
+                    {opt}
                   </button>
                 ))}
               </div>
+              <p className="bm-period-note">
+                {period === 'Weekly'
+                  ? '📅 Setting a weekly budget. Allocate your spending across each week.'
+                  : '📅 Setting a monthly budget. Allocate your spending across the whole month.'}
+              </p>
+            </div>
+
+            {/* Allocate by Category label */}
+            <div className="bm-alloc-header">
+              <label className="bm-label">Allocate by Category</label>
+              <p className="bm-alloc-hint">
+                Drag each slider to plan how much to spend per category
+              </p>
             </div>
 
             {/* Category sliders */}
@@ -118,7 +130,6 @@ function BudgetModal({ currentBudget, onSave, onClose, currency }) {
                       value={allocs[cat.id]}
                       onChange={e => handleSlider(cat.id, e.target.value)}
                       className="bm-slider"
-                      style={{ '--cat-color': cat.color }}
                     />
                     <div
                       className="bm-slider-fill"
@@ -132,11 +143,11 @@ function BudgetModal({ currentBudget, onSave, onClose, currency }) {
               ))}
             </div>
 
-            {/* Summary row */}
+            {/* Summary */}
             <div className="bm-summary">
               <div className="bm-summary-item">
                 <span>Total Budget</span>
-                <strong>{currency.symbol}{parseFloat(budget).toFixed(2)}</strong>
+                <strong>{currency.symbol}{parseFloat(budget || 0).toFixed(2)}</strong>
               </div>
               <div className="bm-summary-item">
                 <span>Allocated</span>

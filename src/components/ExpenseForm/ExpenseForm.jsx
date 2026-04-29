@@ -18,7 +18,6 @@ function ExpenseForm({ isOpen, onClose, onSuccess, editingExpense = null }) {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Load editing expense data
   useEffect(() => {
     if (editingExpense) {
       setFormData({
@@ -37,9 +36,7 @@ function ExpenseForm({ isOpen, onClose, onSuccess, editingExpense = null }) {
       newErrors.amount = ERROR_MESSAGES.INVALID_AMOUNT;
     }
 
-    if (!formData.description.trim()) {
-      newErrors.description = ERROR_MESSAGES.DESCRIPTION_REQUIRED;
-    }
+    // ── Description is now OPTIONAL — removed required check ──
 
     if (!formData.date) {
       newErrors.date = ERROR_MESSAGES.DATE_REQUIRED;
@@ -51,16 +48,14 @@ function ExpenseForm({ isOpen, onClose, onSuccess, editingExpense = null }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateForm()) return;
-
     setIsSubmitting(true);
 
     try {
       const expenseData = {
         amount: parseFloat(formData.amount),
         category: formData.category,
-        description: formData.description.trim(),
+        description: formData.description.trim() || 'No description',
         date: formData.date
       };
 
@@ -70,7 +65,6 @@ function ExpenseForm({ isOpen, onClose, onSuccess, editingExpense = null }) {
         addExpense(expenseData);
       }
 
-      // Reset form
       setFormData({
         amount: '',
         category: 'food',
@@ -90,11 +84,7 @@ function ExpenseForm({ isOpen, onClose, onSuccess, editingExpense = null }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    // Clear error when user types
+    setFormData(prev => ({ ...prev, [name]: value }));
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: null }));
     }
@@ -115,7 +105,6 @@ function ExpenseForm({ isOpen, onClose, onSuccess, editingExpense = null }) {
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
           <motion.div
             className="modal-backdrop"
             initial={{ opacity: 0 }}
@@ -124,7 +113,6 @@ function ExpenseForm({ isOpen, onClose, onSuccess, editingExpense = null }) {
             onClick={handleClose}
           />
 
-          {/* Modal */}
           <motion.div
             className="modal-container"
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -133,22 +121,17 @@ function ExpenseForm({ isOpen, onClose, onSuccess, editingExpense = null }) {
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
           >
             <div className="expense-form-modal glass">
-              {/* Header */}
               <div className="modal-header">
                 <h2 className="modal-title">
                   {editingExpense ? '✏️ Edit Expense' : '➕ Add New Expense'}
                 </h2>
-                <button
-                  onClick={handleClose}
-                  className="btn-close"
-                  aria-label="Close"
-                >
+                <button onClick={handleClose} className="btn-close" aria-label="Close">
                   <X size={24} />
                 </button>
               </div>
 
-              {/* Form */}
               <form onSubmit={handleSubmit} className="expense-form">
+
                 {/* Amount */}
                 <div className="form-group">
                   <label htmlFor="amount">
@@ -166,9 +149,7 @@ function ExpenseForm({ isOpen, onClose, onSuccess, editingExpense = null }) {
                     className={errors.amount ? 'input-error' : ''}
                     autoFocus
                   />
-                  {errors.amount && (
-                    <span className="error-message">{errors.amount}</span>
-                  )}
+                  {errors.amount && <span className="error-message">{errors.amount}</span>}
                 </div>
 
                 {/* Category */}
@@ -190,10 +171,10 @@ function ExpenseForm({ isOpen, onClose, onSuccess, editingExpense = null }) {
                   </select>
                 </div>
 
-                {/* Description */}
+                {/* Description — OPTIONAL */}
                 <div className="form-group">
                   <label htmlFor="description">
-                    Description <span className="required">*</span>
+                    Description <span className="optional">(optional)</span>
                   </label>
                   <input
                     type="text"
@@ -203,14 +184,8 @@ function ExpenseForm({ isOpen, onClose, onSuccess, editingExpense = null }) {
                     onChange={handleChange}
                     placeholder="e.g., Lunch at cafeteria"
                     maxLength="100"
-                    className={errors.description ? 'input-error' : ''}
                   />
-                  {errors.description && (
-                    <span className="error-message">{errors.description}</span>
-                  )}
-                  <span className="char-count">
-                    {formData.description.length}/100
-                  </span>
+                  <span className="char-count">{formData.description.length}/100</span>
                 </div>
 
                 {/* Date */}
@@ -227,33 +202,19 @@ function ExpenseForm({ isOpen, onClose, onSuccess, editingExpense = null }) {
                     max={new Date().toISOString().split('T')[0]}
                     className={errors.date ? 'input-error' : ''}
                   />
-                  {errors.date && (
-                    <span className="error-message">{errors.date}</span>
-                  )}
+                  {errors.date && <span className="error-message">{errors.date}</span>}
                 </div>
 
-                {/* Error message */}
                 {errors.submit && (
-                  <div className="error-banner">
-                    {errors.submit}
-                  </div>
+                  <div className="error-banner">{errors.submit}</div>
                 )}
 
-                {/* Actions */}
                 <div className="form-actions">
-                  <button
-                    type="button"
-                    onClick={handleClose}
-                    className="btn btn-secondary"
-                    disabled={isSubmitting}
-                  >
+                  <button type="button" onClick={handleClose}
+                    className="btn btn-secondary" disabled={isSubmitting}>
                     Cancel
                   </button>
-                  <button
-                    type="submit"
-                    className="btn btn-primary"
-                    disabled={isSubmitting}
-                  >
+                  <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
                     {isSubmitting ? '💫 Saving...' : editingExpense ? '✅ Update' : '➕ Add Expense'}
                   </button>
                 </div>
